@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'/>
+  <title>AWS Cloud Security Monitor - Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f4f8ff; color:#012244; padding:20px; }
+    .card { background:white; border-radius:8px; padding:12px; box-shadow:0 2px 6px rgba(0,0,0,0.08); margin-bottom:12px; }
+    .header { display:flex; justify-content:space-between; align-items:center; }
+    .title { font-size:20px; color:#003366; }
+    .badge { background:#e6f0ff; color:#003366; padding:6px 10px; border-radius:6px; }
+    .finding { border-left:4px solid #cce0ff; padding-left:8px; margin-bottom:8px; }
+    .sev-high { border-left-color:#f56260; }
+    .sev-med { border-left-color:#f5a623; }
+    .sev-low { border-left-color:#6aa84f; }
+  </style>
+</head>
+<body>
+  <div class="header card">
+    <div class="title">AWS Cloud Security Monitor — Demo</div>
+    <div class="badge">Demo Mode</div>
+  </div>
+
+  <div id="feed"></div>
+
+  <script>
+    async function fetchFindings() {
+      try {
+        const res = await fetch('/findings');
+        const data = await res.json();
+        renderFindings(data);
+      } catch (e) {
+        document.getElementById('feed').innerHTML = '<div class="card">Error fetching findings: '+e+'</div>';
+      }
+    }
+
+    function renderFindings(data) {
+      const feed = document.getElementById('feed');
+      feed.innerHTML = '';
+      const findings = data.findings || data;
+      if(!findings || findings.length === 0) {
+        feed.innerHTML = '<div class="card">No findings detected (mock data).</div>';
+        return;
+      }
+      findings.forEach(f => {
+        const div = document.createElement('div');
+        div.className = 'card finding ' + (f.Severity >=7 ? 'sev-high' : (f.Severity>=4 ? 'sev-med' : 'sev-low'));
+        div.innerHTML = '<strong>'+ (f.Title || f.title) +'</strong><div>Severity: '+(f.Severity||f.severity)+'</div><div>Type: '+(f.Type||f.type||'N/A')+'</div><div>Region: '+(f.Region||'N/A')+'</div><pre style="white-space:pre-wrap">'+(f.Description||f.description||'')+'</pre>';
+        feed.appendChild(div);
+      });
+    }
+
+    // poll every 5 seconds
+    fetchFindings();
+    setInterval(fetchFindings, 5000);
+  </script>
+</body>
+</html>

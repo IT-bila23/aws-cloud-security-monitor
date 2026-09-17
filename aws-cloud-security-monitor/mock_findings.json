@@ -1,0 +1,28 @@
+{
+  "findings": [
+    {
+      "Title": "Recon:EC2/PortProbeUnprotectedPort",
+      "Severity": 5,
+      "Type": "Recon:EC2/PortProbeUnprotectedPort",
+      "Region": "us-east-1",
+      "Resource": "i-1234567890abcdef",
+      "Description": "EC2 instance is being probed on port 22 (SSH). Potential port scan activity."
+    },
+    {
+      "Title": "UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration",
+      "Severity": 8,
+      "Type": "UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration",
+      "Region": "eu-west-1",
+      "Resource": "i-0abcdef1234567890",
+      "Description": "Possible credential exfiltration from instance profile."
+    },
+    {
+      "Title": "S3:PublicReadProhibited",
+      "Severity": 4,
+      "Type": "S3:PublicReadProhibited",
+      "Region": "ap-south-1",
+      "Resource": "arn:aws:s3:::example-bucket",
+      "Description": "S3 bucket example-bucket was made public."
+    }
+  ]
+}
